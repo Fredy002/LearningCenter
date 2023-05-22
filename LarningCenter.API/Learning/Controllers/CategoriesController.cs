@@ -19,8 +19,8 @@ public class CategoriesController : ControllerBase
 
     public async Task<IEnumerable<CategoryResource>> GetAllAsync()
     {
-        var Categories = await _categoryService.ListAsync();
-        var resource = _mapper.Map<IEnumerable<Category>, IEnumerable<CategoryResource>>(Categories);
+        var categories = await _categoryService.ListAsync();
+        var resource = _mapper.Map<IEnumerable<Category>, IEnumerable<CategoryResource>>(categories);
         return resource;
     }
 }
