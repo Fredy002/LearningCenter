@@ -1,4 +1,10 @@
+using LearningCenter.API.Learning.Domain.Repositories;
+using LearningCenter.API.Learning.Domain.Services;
+using LearningCenter.API.Learning.Mapping;
+using LearningCenter.API.Learning.Persistence.Repositories;
+using LearningCenter.API.Learning.Services;
 using LearningCenter.API.Shared.Persistence.Contexts;
+using LearningCenter.API.Shared.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +28,20 @@ builder.Services.AddDbContext<AppDbContext>(
 
 // Add lowercase routes
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
+
+// AutoMapper Configuration
+builder.Services.AddAutoMapper(
+    typeof(ModelToResourceProfile),
+    typeof(ResourceToModelProfile)
+    );
+
+// Dependency Injection Configuration
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ITutorialRepository, TutorialRepository>();
+builder.Services.AddScoped<ITutorialService, TutorialService>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 
 var app = builder.Build();
 
