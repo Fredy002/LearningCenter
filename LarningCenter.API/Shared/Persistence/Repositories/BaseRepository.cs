@@ -1,6 +1,6 @@
-using LarningCenter.API.Learning.Persistence.Contexts;
+using LarningCenter.API.Shared.Persistence.Contexts;
 
-namespace LarningCenter.API.Learning.Persistence.Repositories;
+namespace LarningCenter.API.Shared.Persistence.Repositories;
 
 public class BaseRepository
 {

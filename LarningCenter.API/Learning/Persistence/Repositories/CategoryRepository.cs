@@ -1,6 +1,7 @@
 using LarningCenter.API.Learning.Domain.Model;
 using LarningCenter.API.Learning.Domain.Repositories;
-using LarningCenter.API.Learning.Persistence.Contexts;
+using LarningCenter.API.Shared.Persistence.Contexts;
+using LarningCenter.API.Shared.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace LarningCenter.API.Learning.Persistence.Repositories;

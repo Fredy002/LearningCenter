@@ -2,7 +2,7 @@ using LarningCenter.API.Learning.Domain.Model;
 using LarningCenter.API.Shared.Extensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace LarningCenter.API.Learning.Persistence.Contexts;
+namespace LarningCenter.API.Shared.Persistence.Contexts;
 
 public class AppDbContext : DbContext
 {
