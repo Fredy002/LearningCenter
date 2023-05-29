@@ -1,10 +1,4 @@
-using LarningCenter.API.Learning.Domain.Repositories;
-using LarningCenter.API.Learning.Domain.Services;
-using LarningCenter.API.Learning.Mapping;
-using LarningCenter.API.Learning.Persistence.Repositories;
-using LarningCenter.API.Learning.Services;
 using LarningCenter.API.Shared.Persistence.Contexts;
-using LarningCenter.API.Shared.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,29 +10,18 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Add Database Context Connection
+// Add Database Connection
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<AppDbContext>(
-        options => options.UseMySQL(connectionString)
-            .LogTo(Console.WriteLine, LogLevel.Information)
-            .EnableSensitiveDataLogging()
-            .EnableDetailedErrors()
+    options => options.UseMySQL(connectionString)
+        .LogTo(Console.WriteLine, LogLevel.Information)
+        .EnableSensitiveDataLogging()
+        .EnableDetailedErrors()
 );
 
-// Add lowerCase routes
+// Add lowercase routes
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
-
-// AutoMapper Configuration
-builder.Services.AddAutoMapper(
-    typeof(ModelToResourceProfile),
-    typeof(ResourceToModelProfile)
-);
-
-// Dependency Injection Configuration
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 
