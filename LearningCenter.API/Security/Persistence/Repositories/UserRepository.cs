@@ -2,6 +2,7 @@ using LearningCenter.API.Security.Domain.Models;
 using LearningCenter.API.Security.Domain.Repositories;
 using LearningCenter.API.Shared.Persistence.Contexts;
 using LearningCenter.API.Shared.Persistence.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace LearningCenter.API.Security.Persistence.Repositories;
 
@@ -11,43 +12,43 @@ public class UserRepository :BaseRepository, IUserRepository
     {
     }
 
-    public Task<IEnumerable<User>> ListAsync()
+    public async Task<IEnumerable<User>> ListAsync()
     {
-        throw new NotImplementedException();
+        return await _context.Users.ToListAsync();
     }
 
-    public Task AddAsync(User user)
+    public async Task AddAsync(User user)
     {
-        throw new NotImplementedException();
+        await _context.Users.AddAsync(user);
     }
 
-    public Task<User> FindByIdAsync(int id)
+    public async Task<User> FindByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        return await _context.Users.FindAsync(id);
     }
 
-    public Task<User> FindByUserNameAsync(string userName)
+    public async Task<User> FindByUserNameAsync(string userName)
     {
-        throw new NotImplementedException();
+        return await _context.Users.SingleOrDefaultAsync(u => u.UserName == userName);
     }
 
     public bool ExistsByUserName(string userName)
     {
-        throw new NotImplementedException();
+        return _context.Users.Any(u => u.UserName == userName);
     }
 
     public User FindById(int id)
     {
-        throw new NotImplementedException();
+        return _context.Users.Find(id);
     }
 
     public void Update(User user)
     {
-        throw new NotImplementedException();
+        _context.Users.Update(user);
     }
 
     public void Remove(User user)
     {
-        throw new NotImplementedException();
+        _context.Users.Remove(user);
     }
 }
