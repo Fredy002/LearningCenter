@@ -1,5 +1,6 @@
 using LearningCenter.API.Shared.Extensions;
 using LearningCenter.API.Learning.Domain.Model;
+using LearningCenter.API.Security.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LearningCenter.API.Shared.Persistence.Contexts;
@@ -8,6 +9,7 @@ public class AppDbContext : DbContext
 {
     public DbSet<Category> Categories { get; set; }
     public DbSet<Tutorial> Tutorials { get; set; }
+    public DbSet<User> Users { get; set; }
 
     public AppDbContext(DbContextOptions options) : base(options)
     {
@@ -35,6 +37,13 @@ public class AppDbContext : DbContext
         builder.Entity<Tutorial>().Property(p => p.Title).IsRequired().HasMaxLength(50);
         builder.Entity<Tutorial>().Property(p => p.Description).HasMaxLength(120);
         
+        // Constraints
+        builder.Entity<User>().ToTable("Users");
+        builder.Entity<User>().HasKey(p => p.Id);
+        builder.Entity<User>().Property(p => p.Id).IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<User>().Property(p => p.UserName).IsRequired().HasMaxLength(30);
+        builder.Entity<User>().Property(p => p.FirstName).IsRequired();
+        builder.Entity<User>().Property(p => p.LastName).IsRequired();
         
         // Apply Snake Case Naming Convention
         
