@@ -18,7 +18,6 @@
       <Folder Include="Security\Authorization\" />
       <Folder Include="Security\Controllers\" />
       <Folder Include="Security\Exceptions\" />
-      <Folder Include="Security\Mapping\" />
       <Folder Include="Security\Persistence\" />
     </ItemGroup>
 
