@@ -2,11 +2,11 @@ namespace LearningCenter.API.Learning.Domain.Model;
 
 public class Tutorial
 {
-   public int Id { get; set; }
-   public string Title { get; set; }
-   public string Description { get; set; }
-   
-   // Relationships
-   public int CategoryId { get; set; }
-   public Category Category { get; set; }
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public string Description { get; set; }
+    
+    // Relationships
+    public int CategoryId { get; set; }
+    public Category Category { get; set; }
 }

@@ -4,7 +4,7 @@ namespace LearningCenter.API.Shared.Extensions;
 
 public static class ModelStateExtencions
 {
-    public static List<string> GetErrorMessage(this ModelStateDictionary dictionary)
+    public static List<string> GetErrorMessages(this ModelStateDictionary dictionary)
     {
         return dictionary.SelectMany(m => m.Value.Errors)
             .Select(m => m.ErrorMessage)

@@ -6,23 +6,24 @@ namespace LearningCenter.API.Shared.Persistence.Contexts;
 
 public class AppDbContext : DbContext
 {
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<Tutorial> Tutorials { get; set; }
+
     public AppDbContext(DbContextOptions options) : base(options)
     {
     }
 
-    public DbSet<Category> Categories { get; set; }
-    public DbSet<Tutorial> Tutorials { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        
+
         builder.Entity<Category>().ToTable("Categories");
         builder.Entity<Category>().HasKey(p => p.Id);
         builder.Entity<Category>().Property(p => p.Id).IsRequired().ValueGeneratedOnAdd();
-        builder.Entity<Category>().Property(p=>p.Name).IsRequired().HasMaxLength(30);
+        builder.Entity<Category>().Property(p => p.Name).IsRequired().HasMaxLength(30);
         
         // Relationships
-        
         builder.Entity<Category>()
             .HasMany(p => p.Tutorials)
             .WithOne(p => p.Category)
@@ -32,9 +33,10 @@ public class AppDbContext : DbContext
         builder.Entity<Tutorial>().HasKey(p => p.Id);
         builder.Entity<Tutorial>().Property(p => p.Id).IsRequired().ValueGeneratedOnAdd();
         builder.Entity<Tutorial>().Property(p => p.Title).IsRequired().HasMaxLength(50);
-        builder.Entity<Tutorial>().Property(p => p.Description).IsRequired().HasMaxLength(1200);
+        builder.Entity<Tutorial>().Property(p => p.Description).HasMaxLength(120);
         
-        // Apply snake case naming convention
+        
+        // Apply Snake Case Naming Convention
         
         builder.UseSnakeCaseNamingConvention();
     }

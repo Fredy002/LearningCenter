@@ -5,8 +5,8 @@ namespace LearningCenter.API.Learning.Domain.Services;
 
 public interface ITutorialService
 {
-   Task<IEnumerable<Tutorial>> ListCategoryIdAsync(int categoryId);
    Task<IEnumerable<Tutorial>> ListAsync();
+   Task<IEnumerable<Tutorial>> ListByCategoryIdAsync(int categoryId);
    Task<TutorialResponse> SaveAsync(Tutorial tutorial);
    Task<TutorialResponse> UpdateAsync(int id, Tutorial tutorial);
    Task<TutorialResponse> DeleteAsync(int id);
