@@ -13,6 +13,7 @@ using LearningCenter.API.Security.Services;
 using LearningCenter.API.Shared.Persistence.Contexts;
 using LearningCenter.API.Shared.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +22,46 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+// Add API Documentation Information
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "ACME Learning Center API",
+        Description = "ACME Learning Center RESTful API",
+        TermsOfService = new Uri("https://acme-learning.com/tos"),
+        Contact = new OpenApiContact
+        {
+            Name = "ACME.studio",
+            Url = new Uri("https://acme.studio")
+        },
+        License = new OpenApiLicense
+        {
+            Name = "ACME Learning Center Resources License",
+            Url = new Uri("https://acme-learning.com/license")
+        }
+    });
+    options.EnableAnnotations();
+    options.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        Description = "JWT Authorization header using the Bearer scheme."
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference { Type = 
+                    ReferenceType.SecurityScheme, Id = "bearerAuth" }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 // Add CORS
 builder.Services.AddCors();
@@ -79,8 +119,13 @@ using (var context = scope.ServiceProvider.GetService<AppDbContext>())
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("v1/swagger.json", "v1");
+        options.RoutePrefix = "swagger";
+    });
 }
+
 
 // Configure CORS 
 app.UseCors(x => x

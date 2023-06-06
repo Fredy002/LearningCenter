@@ -31,7 +31,8 @@ public class JwtHandler : IJwtHandler
         {
             Subject = new ClaimsIdentity(new[]
             {
-                new Claim("id", user.Id.ToString())
+                new Claim( ClaimTypes.Sid, user.Id.ToString()),
+                new Claim( ClaimTypes.Name, user.UserName),
             }),
             Expires = DateTime.UtcNow.AddDays(7),
             SigningCredentials = new SigningCredentials(
@@ -39,14 +40,14 @@ public class JwtHandler : IJwtHandler
                 SecurityAlgorithms.HmacSha256Signature)
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);
-        Console.WriteLine($"token: {token.Id}, {token.Issuer}, {token.SecurityKey?.ToString()}");
+        Console.WriteLine($"token: {token.Id}, {token.Issuer}, {token?.SecurityKey?.ToString()}");
         return tokenHandler.WriteToken(token);
 
     }
 
     public int? ValidateToken(string token)
     {
-        if (token == null)
+        if (string.IsNullOrEmpty(token))
             return null;
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
@@ -62,10 +63,9 @@ public class JwtHandler : IJwtHandler
                     ValidateAudience = false,
                     // Expiration with no delay
                     ClockSkew = TimeSpan.Zero
-                }, out SecurityToken validatedToken);
+                }, out var validatedToken);
             var jwtToken = (JwtSecurityToken)validatedToken;
-            var userId = int.Parse(jwtToken.Claims.First(
-                claim => claim.Type == "id").Value);
+            var userId = int.Parse(jwtToken.Claims.First(claim => claim.Type == "id").Value);
             return userId;
         }
         catch (Exception e)
