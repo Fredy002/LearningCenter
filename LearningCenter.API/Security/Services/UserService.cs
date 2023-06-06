@@ -1,5 +1,6 @@
 using AutoMapper;
 using LearningCenter.API.Learning.Domain.Repositories;
+using LearningCenter.API.Security.Authorization.Handlers.Interfaces;
 using LearningCenter.API.Security.Domain.Models;
 using LearningCenter.API.Security.Domain.Repositories;
 using LearningCenter.API.Security.Domain.Services;
@@ -12,17 +13,38 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IJwtHandler _jwtHandler;
     private readonly IMapper _mapper;
-    public UserService(IUserRepository userRepository, IUnitOfWork 
-        unitOfWork, IMapper mapper)
+
+    public UserService(IUserRepository userRepository, IUnitOfWork unitOfWork, IJwtHandler jwtHandler, IMapper mapper)
     {
         _userRepository = userRepository;
         _unitOfWork = unitOfWork;
+        _jwtHandler = jwtHandler;
         _mapper = mapper;
     }
-    public Task<AuthenticateResponse> Authenticate(AuthenticateRequest model)
+
+    public async Task<AuthenticateResponse> Authenticate(AuthenticateRequest request)
     {
-        throw new NotImplementedException();
+        var user = await _userRepository.FindByUserNameAsync(request.UserName);
+        Console.WriteLine($"Request: {request.UserName}, {request.Password}");
+        Console.WriteLine($"User: {user.Id}, {user.FirstName}, {user.LastName}, {user.UserName}, {user.PasswordHash}");
+ 
+        // validate
+        if (user == null || !BCryptNet.Verify(request.Password, 
+                user.PasswordHash))
+        {
+            Console.WriteLine("Authentication Error");
+            throw new AppException("Username or password is incorrect");
+        }
+ 
+        Console.WriteLine("Authentication successful. About to generate token");
+        // authentication successful
+        var response = _mapper.Map<AuthenticateResponse>(user);
+        Console.WriteLine($"Response: {response.Id}, {response.FirstName}, {response.LastName}, {response.UserName}");
+        response.Token = _jwtHandler.GenerateToken(user);
+        Console.WriteLine($"Generated token is {response.Token}");
+        return response;
     }
     public async Task<IEnumerable<User>> ListAsync()
     {

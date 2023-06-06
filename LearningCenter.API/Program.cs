@@ -2,6 +2,10 @@ using LearningCenter.API.Learning.Domain.Repositories;
 using LearningCenter.API.Learning.Domain.Services;
 using LearningCenter.API.Learning.Persistence.Repositories;
 using LearningCenter.API.Learning.Services;
+using LearningCenter.API.Security.Authorization.Handlers.Implementations;
+using LearningCenter.API.Security.Authorization.Handlers.Interfaces;
+using LearningCenter.API.Security.Authorization.Handlers.Settings;
+using LearningCenter.API.Security.Authorization.Middleware;
 using LearningCenter.API.Security.Domain.Repositories;
 using LearningCenter.API.Security.Domain.Services;
 using LearningCenter.API.Security.Persistence.Repositories;
@@ -19,6 +23,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Add CORS
+builder.Services.AddCors();
+
 // Add Database Connection
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -33,6 +40,9 @@ builder.Services.AddDbContext<AppDbContext>(
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+// AppSettings Configuration
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+
 // Dependency Injection Configuration
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -41,8 +51,10 @@ builder.Services.AddScoped<ITutorialRepository, TutorialRepository>();
 builder.Services.AddScoped<ITutorialService, TutorialService>();
 
 // Security Injection Configuration
+builder.Services.AddScoped<IJwtHandler, JwtHandler>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+
 
 // AutoMapper Configuration
 
@@ -70,10 +82,23 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Configure CORS 
+app.UseCors(x => x
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+);
+
+// Configure Error Handler Middleware
+app.UseMiddleware<ErrorHandlerMiddleware>();
+// Configure JWT Handling
+app.UseMiddleware<JwtMiddleware>();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.Run();
