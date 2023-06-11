@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\LearningCenter.API",
+    "\\LearningCenter.API\\Shared",
+    "\\LearningCenter.API\\Shared\\Persistence",
+    "\\LearningCenter.API\\Shared\\Persistence\\Contexts"
+  ],
+  "SelectedNode": "\\LearningCenter.API\\Program.cs",
+  "PreviewInSolutionExplorer": false
+}

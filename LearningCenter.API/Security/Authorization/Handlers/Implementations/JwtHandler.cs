@@ -13,13 +13,10 @@ public class JwtHandler : IJwtHandler
 {
     private readonly AppSettings _appSettings;
 
-
     public JwtHandler(IOptions<AppSettings> appSettings)
     {
         _appSettings = appSettings.Value;
     }
-
-
     public string GenerateToken(User user)
     {
         // Generate Token for a valid period of 7 days
@@ -27,6 +24,7 @@ public class JwtHandler : IJwtHandler
         Console.WriteLine($"token handler: {tokenHandler.TokenType}");
         var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
         Console.WriteLine($"Secret Key: {key}");
+        
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new[]
@@ -35,14 +33,12 @@ public class JwtHandler : IJwtHandler
                 new Claim( ClaimTypes.Name, user.UserName),
             }),
             Expires = DateTime.UtcNow.AddDays(7),
-            SigningCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(key),
-                SecurityAlgorithms.HmacSha256Signature)
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
+        
         var token = tokenHandler.CreateToken(tokenDescriptor);
         Console.WriteLine($"token: {token.Id}, {token.Issuer}, {token?.SecurityKey?.ToString()}");
         return tokenHandler.WriteToken(token);
-
     }
 
     public int? ValidateToken(string token)
@@ -54,8 +50,7 @@ public class JwtHandler : IJwtHandler
         // Execute Token validation
         try
         {
-            tokenHandler.ValidateToken(token, new 
-                TokenValidationParameters
+            tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
