@@ -1,9 +1,9 @@
 using AutoMapper;
+using LearningCenter.API.Security.Authorization.Attributes;
 using LearningCenter.API.Security.Domain.Models;
 using LearningCenter.API.Security.Domain.Services;
+using LearningCenter.API.Security.Domain.Services.Communication;
 using LearningCenter.API.Security.Resources;
-using LearningCenter.API.Security.Services.Communication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LearningCenter.API.Security.Controllers;

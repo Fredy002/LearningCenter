@@ -1,5 +1,5 @@
 using LearningCenter.API.Security.Authorization.Handlers.Interfaces;
-using LearningCenter.API.Security.Authorization.Handlers.Settings;
+using LearningCenter.API.Security.Authorization.Settings;
 using LearningCenter.API.Security.Domain.Services;
 using Microsoft.Extensions.Options;
 
@@ -25,6 +25,7 @@ public class JwtMiddleware
             // attach user to context on successful jwt validation
             context.Items["User"] = await userService.GetByIdAsync(userId.Value);
         }
+        
         await _next(context);
     }
 }

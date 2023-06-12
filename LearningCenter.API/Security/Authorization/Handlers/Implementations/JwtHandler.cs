@@ -2,7 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using LearningCenter.API.Security.Authorization.Handlers.Interfaces;
-using LearningCenter.API.Security.Authorization.Handlers.Settings;
+using LearningCenter.API.Security.Authorization.Settings;
 using LearningCenter.API.Security.Domain.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -17,6 +17,7 @@ public class JwtHandler : IJwtHandler
     {
         _appSettings = appSettings.Value;
     }
+    
     public string GenerateToken(User user)
     {
         // Generate Token for a valid period of 7 days
@@ -33,7 +34,7 @@ public class JwtHandler : IJwtHandler
                 new Claim( ClaimTypes.Name, user.UserName),
             }),
             Expires = DateTime.UtcNow.AddDays(7),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
         };
         
         var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -45,22 +46,26 @@ public class JwtHandler : IJwtHandler
     {
         if (string.IsNullOrEmpty(token))
             return null;
+        
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+        
         // Execute Token validation
         try
         {
             tokenHandler.ValidateToken(token, new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    // Expiration with no delay
-                    ClockSkew = TimeSpan.Zero
-                }, out var validatedToken);
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                // Expiration with no delay
+                ClockSkew = TimeSpan.Zero
+            }, out var validatedToken);
+            
             var jwtToken = (JwtSecurityToken)validatedToken;
-            var userId = int.Parse(jwtToken.Claims.First(claim => claim.Type == "id").Value);
+            var userId = int.Parse(jwtToken.Claims.First(claim => claim.Type == ClaimTypes.Sid).Value);
+            
             return userId;
         }
         catch (Exception e)

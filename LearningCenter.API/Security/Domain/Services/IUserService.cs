@@ -1,5 +1,5 @@
 using LearningCenter.API.Security.Domain.Models;
-using LearningCenter.API.Security.Services.Communication;
+using LearningCenter.API.Security.Domain.Services.Communication;
 
 namespace LearningCenter.API.Security.Domain.Services;
 

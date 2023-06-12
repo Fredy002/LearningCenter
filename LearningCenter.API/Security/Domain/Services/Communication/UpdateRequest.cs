@@ -1,4 +1,4 @@
-namespace LearningCenter.API.Security.Services.Communication;
+namespace LearningCenter.API.Security.Domain.Services.Communication;
 
 public class UpdateRequest
 {
