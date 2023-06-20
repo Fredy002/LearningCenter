@@ -9,8 +9,7 @@ public class CategoryService : ICategoryService
 {
     private readonly ICategoryRepository _categoryRepository;
     private readonly IUnitOfWork _unitOfWork;
-
-
+    
     public CategoryService(ICategoryRepository categoryRepository, IUnitOfWork unitOfWork)
     {
         _categoryRepository = categoryRepository;
@@ -28,7 +27,6 @@ public class CategoryService : ICategoryService
         {
             await _categoryRepository.AddAsync(category);
             await _unitOfWork.CompleteAsync();
-            
             return new CategoryResponse(category);
         }
         catch (Exception e)
@@ -40,8 +38,10 @@ public class CategoryService : ICategoryService
     public async Task<CategoryResponse> UpdateAsync(int id, Category category)
     {
         var existingCategory = await _categoryRepository.FindByIdAsync(id);
+        
         if (existingCategory == null)
             return new CategoryResponse("Category not found.");
+        
         existingCategory.Name = category.Name;
 
         try
@@ -60,6 +60,7 @@ public class CategoryService : ICategoryService
     public async Task<CategoryResponse> DeleteAsync(int id)
     {
         var existingCategory = await _categoryRepository.FindByIdAsync(id);
+        
         if (existingCategory == null)
             return new CategoryResponse("Category not found.");
 
@@ -72,6 +73,7 @@ public class CategoryService : ICategoryService
         }
         catch (Exception e)
         {
+            // Do nome logging stuff
             return new CategoryResponse($"An error occurred when deleting the category: {e.Message}");
         }
     }

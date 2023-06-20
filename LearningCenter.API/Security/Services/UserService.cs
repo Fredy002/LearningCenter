@@ -14,6 +14,7 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
+    
     private readonly IJwtHandler _jwtHandler;
     private readonly IMapper _mapper;
 
@@ -84,45 +85,46 @@ public class UserService : IUserService
     }
     
     public async Task UpdateAsync(int id, UpdateRequest request)
+    {
+        var user = GetById(id);
+        
+        // Validate
+        if (_userRepository.ExistsByUserName(request.UserName)) 
+            throw new AppException("Username '" + request.UserName + "' is already taken");
+        
+        // Hash password if it was entered
+        if (!string.IsNullOrEmpty(request.Password))
+            user.PasswordHash = BCryptNet.HashPassword(request.Password);
+        
+        // Copy model to user and save
+        _mapper.Map(request, user);
+        try
         {
-            var user = GetById(id);
-            
-            // Validate
-            if (_userRepository.ExistsByUserName(request.UserName)) 
-                throw new AppException("Username '" + request.UserName + "' is already taken");
-            
-            // Hash password if it was entered
-            if (!string.IsNullOrEmpty(request.Password))
-                user.PasswordHash = BCryptNet.HashPassword(request.Password);
-            
-            // Copy model to user and save
-            _mapper.Map(request, user);
-            try
-            {
-                _userRepository.Update(user);
-                await _unitOfWork.CompleteAsync();
-            }
-            catch (Exception e)
-            {
-                throw new AppException($"An error occurred while updating the user: {e.Message}");
-            }
+            _userRepository.Update(user);
+            await _unitOfWork.CompleteAsync();
         }
-         public async Task DeleteAsync(int id)
-            {
-                var user = GetById(id);
-         
-                try
-                {
-                    _userRepository.Remove(user);
-                    await _unitOfWork.CompleteAsync();
-                }
-                catch (Exception e)
-                {
-                    throw new AppException($"An error occurred while deleting the user: {e.Message}");
-                }
-            }
-         
+        catch (Exception e)
+        {
+            throw new AppException($"An error occurred while updating the user: {e.Message}");
+        }
+    }
+    
+    public async Task DeleteAsync(int id)
+    {
+        var user = GetById(id);
+        
+        try
+        {
+            _userRepository.Remove(user);
+            await _unitOfWork.CompleteAsync();
+        }
+        catch (Exception e)
+        {
+            throw new AppException($"An error occurred while deleting the user: {e.Message}");
+        }
+    }
     // helper methods
+    
     private User GetById(int id)
     {
         var user = _userRepository.FindById(id);

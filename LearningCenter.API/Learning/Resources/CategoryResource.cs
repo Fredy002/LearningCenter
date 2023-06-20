@@ -1,6 +1,6 @@
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace LearningCenter.API.Learning.Resource;
+namespace LearningCenter.API.Learning.Resources;
 
 public class CategoryResource
 {

@@ -11,7 +11,6 @@ public class TutorialService : ITutorialService
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICategoryRepository _categoryRepository;
 
-
     public TutorialService(ITutorialRepository tutorialRepository, IUnitOfWork unitOfWork, ICategoryRepository categoryRepository)
     {
         _tutorialRepository = tutorialRepository;

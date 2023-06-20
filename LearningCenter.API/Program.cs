@@ -17,6 +17,9 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add CORS
+builder.Services.AddCors();
+
 // Add services to the container.
 builder.Services.AddControllers();
 
@@ -24,7 +27,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-// Add API Documentation Information
+    // Add API Documentation Information
+    
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
@@ -66,10 +70,8 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// Add CORS
-builder.Services.AddCors();
-
 // Add Database Connection
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<AppDbContext>(
@@ -81,6 +83,8 @@ builder.Services.AddDbContext<AppDbContext>(
 
 // Add lowercase routes
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
+
+// Shared Injection Configuration
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // AppSettings Configuration
@@ -99,6 +103,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 // AutoMapper Configuration
+
 builder.Services.AddAutoMapper(
     typeof(LearningCenter.API.Learning.Mapping.ModelToResourceProfile),
     typeof(LearningCenter.API.Security.Mapping.ModelToResourceProfile),
@@ -109,6 +114,7 @@ builder.Services.AddAutoMapper(
 var app = builder.Build();
 
 // Validation for ensuring Database Objects are created
+
 using (var scope = app.Services.CreateScope())
 using (var context = scope.ServiceProvider.GetService<AppDbContext>())
 {
@@ -127,6 +133,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // Configure CORS 
+
 app.UseCors(x => x
     .AllowAnyOrigin()
     .AllowAnyMethod()
@@ -135,6 +142,7 @@ app.UseCors(x => x
 
 // Configure Error Handler Middleware
 app.UseMiddleware<ErrorHandlerMiddleware>();
+
 // Configure JWT Handling
 app.UseMiddleware<JwtMiddleware>();
 
@@ -145,3 +153,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }

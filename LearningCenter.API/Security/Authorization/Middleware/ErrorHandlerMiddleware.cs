@@ -23,6 +23,7 @@ public class ErrorHandlerMiddleware
         {
             var response = context.Response;
             response.ContentType = "application/json";
+            
             switch (error)
             {
                 case AppException e:
@@ -35,8 +36,7 @@ public class ErrorHandlerMiddleware
                     break;
                 default:
                     // unhandled error
-                    response.StatusCode =
-                        (int)HttpStatusCode.InternalServerError;
+                    response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     break;
             }
 

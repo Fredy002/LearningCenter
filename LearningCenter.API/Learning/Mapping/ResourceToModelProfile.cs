@@ -1,6 +1,6 @@
 using AutoMapper;
 using LearningCenter.API.Learning.Domain.Model;
-using LearningCenter.API.Learning.Resource;
+using LearningCenter.API.Learning.Resources;
 
 namespace LearningCenter.API.Learning.Mapping;
 
@@ -8,7 +8,7 @@ public class ResourceToModelProfile : Profile
 {
     protected ResourceToModelProfile()
     {
-        CreateMap<CategoryResource, Category>();
-        CreateMap<TutorialResource, Tutorial>();
+        CreateMap<SaveCategoryResource, Category>();
+        CreateMap<SaveTutorialResource, Tutorial>();
     }
 }

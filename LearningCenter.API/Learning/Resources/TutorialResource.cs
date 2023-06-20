@@ -1,4 +1,4 @@
-namespace LearningCenter.API.Learning.Resource;
+namespace LearningCenter.API.Learning.Resources;
 
 public class TutorialResource
 {

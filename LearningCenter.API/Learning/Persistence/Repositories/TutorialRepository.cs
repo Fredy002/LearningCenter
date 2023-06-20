@@ -14,7 +14,9 @@ public class TutorialRepository : BaseRepository, ITutorialRepository
 
     public async Task<IEnumerable<Tutorial>> ListAsync()
     {
-        return await _context.Tutorials.Include(p => p.Category).ToListAsync();
+        return await _context.Tutorials
+            .Include(p => p.Category)
+            .ToListAsync();
     }
 
     public async Task AddAsync(Tutorial tutorial)
@@ -24,17 +26,24 @@ public class TutorialRepository : BaseRepository, ITutorialRepository
 
     public async Task<Tutorial> FindByIdAsync(int tutorialId)
     {
-        return await _context.Tutorials.Include(p => p.Category).FirstOrDefaultAsync(p => p.Id == tutorialId);
+        return await _context.Tutorials
+            .Include(p => p.Category)
+            .FirstOrDefaultAsync(p => p.Id == tutorialId);
     }
 
     public async Task<Tutorial> FindByTitleAsync(string title)
     {
-        return await _context.Tutorials.Include(p => p.Category).FirstOrDefaultAsync(p => p.Title == title);
+        return await _context.Tutorials
+            .Include(p => p.Category)
+            .FirstOrDefaultAsync(p => p.Title == title);
     }
 
     public async Task<IEnumerable<Tutorial>> FindByCategoryIdAsync(int categoryId)
     {
-        return await _context.Tutorials.Where(p=>p.CategoryId == categoryId).Include(p => p.Category).ToListAsync();
+        return await _context.Tutorials
+            .Where(p=>p.CategoryId == categoryId)
+            .Include(p => p.Category)
+            .ToListAsync();
     }
 
     public void Update(Tutorial tutorial)

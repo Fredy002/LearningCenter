@@ -15,7 +15,6 @@ public class AppDbContext : DbContext
     {
     }
 
-
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -36,6 +35,8 @@ public class AppDbContext : DbContext
         builder.Entity<Tutorial>().Property(p => p.Id).IsRequired().ValueGeneratedOnAdd();
         builder.Entity<Tutorial>().Property(p => p.Title).IsRequired().HasMaxLength(50);
         builder.Entity<Tutorial>().Property(p => p.Description).HasMaxLength(120);
+        
+        // Users
         
         // Constraints
         builder.Entity<User>().ToTable("Users");
